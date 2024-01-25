@@ -1,6 +1,6 @@
-CREATE table IF NOT EXISTS genre (
+CREATE TABLE IF NOT EXISTS genre (
 	id SERIAL PRIMARY KEY,
-	genre_name VARCHAR(60) NOT NULL
+	genre_name VARCHAR(60) UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS person (
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS person (
 CREATE TABLE IF NOT EXISTS albums (
 	id SERIAL PRIMARY KEY,
 	name_album VARCHAR(60) NOT NULL,
-	date_album DATE NOT NULL
+	date_album DATE CHECK(date_album >= 2000-01-01) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS PersonAlbum (
@@ -30,12 +30,18 @@ CREATE TABLE IF NOT EXISTS tracks (
 	id SERIAL PRIMARY KEY,
 	albums_id INTEGER REFERENCES albums(id),
 	track_name VARCHAR(80) NOT NULL,
-	duration INTERVAL NOT NULL
+	duration INTEGER CHECK(1200) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS compil (
 	id SERIAL PRIMARY KEY,
-	track_id INTEGER REFERENCES tracks(id),
 	compil_name VARCHAR(60) NOT NULL,
-	year_release INTEGER NOT NULL
+	year_release DATE CHECK(date_album >= 2000-01-01) NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS TracksCompil (
+	track_id INTEGER REFERENCES tracks(id),
+	compil_id INTEGER REFERENCES compil(id),
+	CONSTRAINT tc PRIMARY KEY (track_id, compil_id)
+);
+	
